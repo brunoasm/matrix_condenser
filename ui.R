@@ -24,7 +24,7 @@ shinyUI(fluidPage(
       uiOutput("NremoveInput"), #slide bar with number of bad samples to remove, limits depend on file chosen
       actionButton("go", "Generate graph"),
       tags$div(class="header", checked=NA, tags$p(),
-               tags$p("Source code and README on github:", tags$a(href="https://github.com/brunoasm/matrix_condenser", "brunoasm/matrix_condense", target="_blank")))
+               tags$p("Source code and README on github:", tags$a(href="https://github.com/brunoasm/matrix_condenser", "brunoasm/matrix_condenser", target="_blank")))
     ),
 
     # Show a plot of the generated distribution
