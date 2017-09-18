@@ -148,7 +148,11 @@ shinyServer(function(input, output) {
     #now, remove those samples from the full matrix and set mincov again
     reduced_matrix <-samples_vs_loci()[is.na(match(rownames(samples_vs_loci()), samples_to_remove)), ]
     loci_to_keep <- apply(reduced_matrix, 2, sum) >= input$mincov
+    nloci = apply(reduced_matrix,1,sum)
+    nsamples = apply(reduced_matrix,2,sum)
+    
     reduced_matrix <- reduced_matrix[,loci_to_keep]
+    reduced_matrix = reduced_matrix[order(nloci),order(nsamples)]
     
     #now save variables to be used by other expressions
     v$samples_to_remove <- samples_to_remove
