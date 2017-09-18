@@ -12,14 +12,15 @@ I wrote this app with a user interface to help me visualize the effects of exclu
 This app can be run locally using Rstudio. There is also a web version hosted at https://bmedeiros.shinyapps.io/matrix_condenser. I use the free version of shiny, so I have some usage quota that might be exceeded if too many people use the app or the dataset is too big. In case it does not work online, simply download the repository and run locally on your computer. Apparently, if you have Rstudio and shiny package installed, you can use the command `runGitHub("brunoasm/matrix_condenser")` to download and run in your computer.
 
 This app can take two kinds of input.
-1 - Occupancy Matrix.
+
+1. Occupancy Matrix.
 This is a comma-separated text file with the following format:
  * First row containing locus names (will be ignored)
  * First column containing sample names
  * Other columns indicating whether a locus is present or absent. This could be accomplished in three ways:
-  * Using the words TRUE or FALSE to indicate whether a gene is present
-  * Using T or F as shorthand for true and false
-  * Using 1 to indicate presence and 0 to indicate absence
+   - Using the words TRUE or FALSE to indicate whether a gene is present
+   - Using T or F as shorthand for true and false
+   - Using 1 to indicate presence and 0 to indicate absence
 
 Examples of acceptable files (all three have the same information):
 ```
@@ -83,7 +84,7 @@ BdM1720,F,T,F,T
 BdM1739,F,T,F,T
 ```
 
-2 - `*.loci` output from ipyrad.
+2. `*.loci` output from ipyrad.
 To parse a loci file from ipyrad into an occupancy matrix, before uploading select `ipyrad *.loci` from the drop down menu.
 
 Parsing takes a while, so when it is done, a button with the option to download the occupancy matrix in csv format appears. Download this file if you intend to use the tool again with the same dataset. It can be uploaded as *Occupancy matrix* to speed things up.
