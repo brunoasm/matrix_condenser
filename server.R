@@ -148,11 +148,12 @@ shinyServer(function(input, output) {
     #now, remove those samples from the full matrix and set mincov again
     reduced_matrix <-samples_vs_loci()[is.na(match(rownames(samples_vs_loci()), samples_to_remove)), ]
     loci_to_keep <- apply(reduced_matrix, 2, sum) >= input$mincov
+    reduced_matrix <- reduced_matrix[,loci_to_keep]
+    
     nloci = apply(reduced_matrix,1,sum)
     nsamples = apply(reduced_matrix,2,sum)
     
-    reduced_matrix <- reduced_matrix[,loci_to_keep]
-    reduced_matrix = reduced_matrix[order(nloci),order(nsamples)]
+    reduced_matrix = reduced_matrix[order(nloci),order(nsamples,decreasing = T)]
     
     #now save variables to be used by other expressions
     v$samples_to_remove <- samples_to_remove
@@ -167,7 +168,7 @@ shinyServer(function(input, output) {
       reduce_matrix()
       #plot
       par('mar' = par('mar') + c(0,3,0,0))
-      image(x = 1:dim(v$reduced_matrix)[2], y = 1:dim(v$reduced_matrix)[1], t(v$reduced_matrix), col = c("white", "black"), yaxt='n', xlab=NA, ylab=NA)
+      image(x = 1:dim(v$reduced_matrix)[2], y = 1:dim(v$reduced_matrix)[1], t(!v$reduced_matrix), col = c("black", "white"), yaxt='n', xlab=NA, ylab=NA)
       axis(2,at = seq(1,dim(v$reduced_matrix)[1],1), rownames(v$reduced_matrix), tick = FALSE, las=1)
     })
   })
