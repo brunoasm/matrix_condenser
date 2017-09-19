@@ -30,7 +30,9 @@ shinyUI(fluidPage(
     # Show a plot of the generated distribution
     mainPanel(
       tabsetPanel(
-        tabPanel("Matrix Occupancy", plotOutput("matrixOccupancy"),
+        tabPanel("Matrix Occupancy", 
+                 verbatimTextOutput("matOccText"),
+                 plotOutput("matrixOccupancy",height = '750px'),
                  helpText("Black = locus present, white = locus absent")), 
         tabPanel("Histogram", plotOutput("covHist"),
                  helpText("Each red tick represents one sample")),

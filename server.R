@@ -69,6 +69,9 @@ parseLociFile <- function(input_path){
 
 parseOccMat <- function(input_path){
   occmat <- as.matrix(read.csv(file = input_path, header = T, row.names = 1, as.is = T))
+  validate(
+    need({dim(occmat)[2] > 0}, message = "Input not an occupancy matrix, check file type!")
+           )
   samples = row.names(occmat)
   occmat = apply(occmat,2,as.logical)
   row.names(occmat) = samples
@@ -184,11 +187,23 @@ shinyServer(function(input, output) {
     })
   })
   # And render texts and tables
+  output$matOccText <- renderText({
+    if (v$doPlot == FALSE) return()
+    isolate({
+      reduce_matrix()
+      dims = dim(v$reduced_matrix)
+      paste('Number of samples: ',dims[1],
+            '\nNumber of loci: ',dims[2],
+            '\nTotal missing data: ',sprintf('%2.2f',100*sum(!v$reduced_matrix)/(prod(dims))),'%', collapse = "")
+    })
+  })
   
+    
   output$excludedSamples <- renderText({
     if (v$doPlot == FALSE) return()
     isolate({
       reduce_matrix()
+      dims = dim(v$reduced_matrix)
       paste(v$samples_to_remove, collapse = " ")
     })
   })
