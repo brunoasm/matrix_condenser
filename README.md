@@ -15,7 +15,8 @@ This app can take two kinds of input.
 
 1. Occupancy Matrix.
 This is a comma-separated text file with the following format:
- * First row containing locus names (will be ignored)
+ * First row containing locus names 
+   - **The names will be largely ignored, but this row must have the same number of columns as other rows!**
  * First column containing sample names
  * Other columns indicating whether a locus is present or absent. This could be accomplished in three ways:
    - Using the words TRUE or FALSE to indicate whether a gene is present
