@@ -32,8 +32,8 @@ shinyUI(fluidPage(
       tabsetPanel(
         tabPanel("Matrix Occupancy", 
                  verbatimTextOutput("matOccText"),
-                 plotOutput("matrixOccupancy",height = '750px'),
-                 helpText("Black = locus present, white = locus absent")), 
+                 helpText("Black = locus present, white = locus absent"),
+                 plotOutput("matrixOccupancy")),
         tabPanel("Histogram", plotOutput("covHist"),
                  helpText("Each red tick represents one sample")),
         tabPanel("Missing Data", dataTableOutput(outputId="missingTable")),

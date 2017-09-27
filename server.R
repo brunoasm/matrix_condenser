@@ -34,41 +34,41 @@ parseLociFile <- function(input_path){
                min = 0, 
                max = n_chuncks+1,
                expr = {
-  
-  while (TRUE){
-    incProgress(0.5)
-    lines = readLines(input_connection, n_lines_per_chunk)
-    if ( length(lines) == 0 ){break}
-    for (line in lines){
-    
-    if (!(grepl("//",line))){
-      #sample = strsplit(line,'\\s+')[[1]][1]
-      seqlines = c(seqlines,line)
-    } else {
-      samples = gsub('\\s.*$','',seqlines)
-      loci[[locus]] = rep(TRUE,length(samples))
-      names(loci[[locus]]) = samples
-      
-      locus = locus + 1
-      loci[[locus]] = logical()
-      seqlines = character()
-    }
-    }
-    incProgress(0.5)
-    
-  }
-  
-  close(input_connection)
-  
-  loci = loci[1:(length(loci)-1)]
-  
-  occmat = ldply(loci, function(x){t(data.frame(x))})
-  incProgress(0.5)
-  occmat[is.na(occmat)] = FALSE
-  occmat = t(occmat)
-  occmat = as.matrix(occmat)
-  colnames(occmat) = paste('locus',1:dim(occmat)[2],sep='_')
-  incProgress(0.5)
+                 
+                 while (TRUE){
+                   incProgress(0.5)
+                   lines = readLines(input_connection, n_lines_per_chunk)
+                   if ( length(lines) == 0 ){break}
+                   for (line in lines){
+                     
+                     if (!(grepl("//",line))){
+                       #sample = strsplit(line,'\\s+')[[1]][1]
+                       seqlines = c(seqlines,line)
+                     } else {
+                       samples = gsub('\\s.*$','',seqlines)
+                       loci[[locus]] = rep(TRUE,length(samples))
+                       names(loci[[locus]]) = samples
+                       
+                       locus = locus + 1
+                       loci[[locus]] = logical()
+                       seqlines = character()
+                     }
+                   }
+                   incProgress(0.5)
+                   
+                 }
+                 
+                 close(input_connection)
+                 
+                 loci = loci[1:(length(loci)-1)]
+                 
+                 occmat = ldply(loci, function(x){t(data.frame(x))})
+                 incProgress(0.5)
+                 occmat[is.na(occmat)] = FALSE
+                 occmat = t(occmat)
+                 occmat = as.matrix(occmat)
+                 colnames(occmat) = paste('locus',1:dim(occmat)[2],sep='_')
+                 incProgress(0.5)
                })
   return(occmat)
 }
@@ -77,7 +77,7 @@ parseOccMat <- function(input_path){
   occmat <- as.matrix(read.csv(file = input_path, header = T, row.names = 1, as.is = T))
   validate(
     need({dim(occmat)[2] > 0}, message = "Input not an occupancy matrix, check file type!")
-           )
+  )
   samples = row.names(occmat)
   occmat = apply(occmat,2,as.logical)
   row.names(occmat) = samples
@@ -86,7 +86,7 @@ parseOccMat <- function(input_path){
 
 shinyServer(function(input, output) {
   #v will store values used accross reactive expressions, starting by plotting indicator
-  v <- reactiveValues(doPlot = FALSE)
+  v <- reactiveValues(doPlot = FALSE, reduced_matrix = matrix(NA,nrow = 1,ncol=1))
   
   # first, open and parse input file.
   # this is a reactive, so it will only be done once for each input file
@@ -97,19 +97,19 @@ shinyServer(function(input, output) {
   })
   
   samples_vs_loci <- reactive({
-  if (filetype() == "ipyrad_loci"){
-    parseLociFile(input$locifile$datapath)
-  } else if (filetype() == "occmatrix"){
-    parseOccMat(input$locifile$datapath)
-  }
-    })
+    if (filetype() == "ipyrad_loci"){
+      parseLociFile(input$locifile$datapath)
+    } else if (filetype() == "occmatrix"){
+      parseOccMat(input$locifile$datapath)
+    }
+  })
   
   #Offer option to download occupancy matrix
   output$downloadMatrix <- downloadHandler(
     filename = 'occupancy_matrix.csv',
     content = function(file){write.csv(samples_vs_loci(),file,row.names = T,col.names = T)}
   )
-    
+  
   
   #Then, generate output button and sliders for mincov and number of samples to remove
   output$downloadOutput <- renderUI({
@@ -168,18 +168,21 @@ shinyServer(function(input, output) {
     v$samples_to_remove <- samples_to_remove
     v$samples_to_include <- samples_to_include
     v$reduced_matrix <- reduced_matrix
-    })
+  })
   
   #Plot graph when action button is pressed
-  output$matrixOccupancy <- renderPlot({
-    if (v$doPlot == FALSE) return()
-    isolate({
-      reduce_matrix()
-      #plot
-      par('mar' = par('mar') + c(0,3,0,0))
-      image(x = 1:dim(v$reduced_matrix)[2], y = 1:dim(v$reduced_matrix)[1], t(!v$reduced_matrix), col = c("black", "white"), yaxt='n', xlab=NA, ylab=NA)
-      axis(2,at = seq(1,dim(v$reduced_matrix)[1],1), rownames(v$reduced_matrix), tick = FALSE, las=1)
-    })
+  observe({
+    output$matrixOccupancy <- renderPlot({
+      if (v$doPlot == FALSE) return()
+      isolate({
+        reduce_matrix()
+        #plot
+        par('mar' = par('mar') + c(0,3,0,0))
+        image(x = 1:dim(v$reduced_matrix)[2], y = 1:dim(v$reduced_matrix)[1], t(!v$reduced_matrix), col = c("black", "white"), yaxt='n', xlab=NA, ylab=NA)
+        axis(2,at = seq(1,dim(v$reduced_matrix)[1],1), rownames(v$reduced_matrix), tick = FALSE, las=1)
+      })
+    },
+    height = 20*dim(v$reduced_matrix)[1])
   })
   
   output$covHist <- renderPlot({
@@ -190,8 +193,7 @@ shinyServer(function(input, output) {
       locus_counts <- apply(v$reduced_matrix, 1 ,sum)
       hist(locus_counts, xlab= "Number of loci in final dataset", main= "Number of loci per sample")
       axis(1,at = locus_counts,lwd = 0, lwd.ticks = 0.8, col.ticks = 'red', labels = FALSE, line = -.5)
-    })
-  })
+    })})
   # And render texts and tables
   output$matOccText <- renderText({
     if (v$doPlot == FALSE) return()
@@ -204,7 +206,7 @@ shinyServer(function(input, output) {
     })
   })
   
-    
+  
   output$excludedSamples <- renderText({
     if (v$doPlot == FALSE) return()
     isolate({
@@ -225,13 +227,13 @@ shinyServer(function(input, output) {
   output$missingTable <- renderDataTable({
     if (v$doPlot == FALSE) return()
     isolate({
-    reduce_matrix()
-    missing_table <- data.frame(samples= rownames(v$reduced_matrix),
-                                pmissing= 100-apply(v$reduced_matrix,1,function(x){mean(x)*100}))
-    names(missing_table) <- c("Sample IDs", "Loci missing (%)")
-    return(missing_table)
+      reduce_matrix()
+      missing_table <- data.frame(samples= rownames(v$reduced_matrix),
+                                  pmissing= 100-apply(v$reduced_matrix,1,function(x){mean(x)*100}))
+      names(missing_table) <- c("Sample IDs", "Loci missing (%)")
+      return(missing_table)
     })
   })
   
-
+  
 })
