@@ -129,6 +129,11 @@ shinyServer(function(input, output) {
     sliderInput("mincov", "Minimum number of samples in a locus:", 0, dim(samples_vs_loci())[1]-input$nremove, min(init, dim(samples_vs_loci())[1]-input$nremove), step = 1)
   })
   
+  output$graphExpansion <- renderUI({
+    if (is.null(input$locifile)) return(NULL)
+    sliderInput("graphExpansion", "Graph Expansion:", 5, 100, 80, step = 1, post = ' %', ticks = FALSE)
+  })
+  
   #create reactives to make action button work
   
   observeEvent(input$go, {
@@ -144,8 +149,13 @@ shinyServer(function(input, output) {
     v$last_value <- input$mincov
   })
   
+  observeEvent(input$graphExpansion, {
+    v$doPlot <- FALSE
+    v$graphExpansion <- input$graphExpansion
+  })
+  
   #Generate a reactive for reducing matrix
-  reduce_matrix <- reactive({
+  reduce_matrix <- reactive({withProgress({
     #first, remove loci below mincov
     loci_to_keep <- apply(samples_vs_loci(), 2, sum) >= input$mincov
     reduced_matrix <- samples_vs_loci()[,loci_to_keep]
@@ -168,22 +178,30 @@ shinyServer(function(input, output) {
     v$samples_to_remove <- samples_to_remove
     v$samples_to_include <- samples_to_include
     v$reduced_matrix <- reduced_matrix
+  },message = 'Rendering output')
   })
   
   #Plot graph when action button is pressed
   observe({
-    output$matrixOccupancy <- renderPlot({
-      if (v$doPlot == FALSE) return()
-      isolate({
-        reduce_matrix()
-        #plot
-        par('mar' = par('mar') + c(0,3,0,0))
-        image(x = 1:dim(v$reduced_matrix)[2], y = 1:dim(v$reduced_matrix)[1], t(!v$reduced_matrix), col = c("black", "white"), yaxt='n', xlab=NA, ylab=NA)
-        axis(2,at = seq(1,dim(v$reduced_matrix)[1],1), rownames(v$reduced_matrix), tick = FALSE, las=1)
-      })
-    },
-    height = 20*dim(v$reduced_matrix)[1])
+    if (v$doPlot == FALSE | is.null(input$locifile)){
+      output$matrixOccupancy <- renderPlot({plot.new()})
+    } else{
+      output$matrixOccupancy <- renderPlot({
+        isolate({
+          reduce_matrix()
+          #plot
+          par('mar'= c(0,7.1,0,2.1))
+          image(x = 1:dim(v$reduced_matrix)[2], y = 1:dim(v$reduced_matrix)[1], t(!v$reduced_matrix), col = c("black", "white"), yaxt='n', xlab=NA, ylab=NA)
+          axis(2,at = seq(1,dim(v$reduced_matrix)[1],1), rownames(v$reduced_matrix), tick = FALSE, las=1)
+        })},
+        height = v$graphExpansion/100*20*dim(v$reduced_matrix)[1])
+      
+    }
+    
+    
   })
+      
+      
   
   output$covHist <- renderPlot({
     if (v$doPlot == FALSE) return()
