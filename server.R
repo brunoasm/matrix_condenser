@@ -190,8 +190,8 @@ shinyServer(function(input, output) {
         isolate({
           reduce_matrix()
           #plot
-          par('mar'= c(0,7.1,0,2.1))
-          image(x = 1:dim(v$reduced_matrix)[2], y = 1:dim(v$reduced_matrix)[1], t(!v$reduced_matrix), col = c("black", "white"), yaxt='n', xlab=NA, ylab=NA)
+          par('mar'= c(1,7.1,0,2.1))
+          image(x = 1:dim(v$reduced_matrix)[2], y = 1:dim(v$reduced_matrix)[1], t(!v$reduced_matrix), col = c("black", "white"), yaxt='n', xaxt='n', xlab=NA, ylab=NA)
           axis(2,at = seq(1,dim(v$reduced_matrix)[1],1), rownames(v$reduced_matrix), tick = FALSE, las=1)
         })},
         height = v$graphExpansion/100*20*dim(v$reduced_matrix)[1])
@@ -200,8 +200,8 @@ shinyServer(function(input, output) {
     
     
   })
-      
-      
+  
+  
   
   output$covHist <- renderPlot({
     if (v$doPlot == FALSE) return()
