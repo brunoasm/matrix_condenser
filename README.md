@@ -103,6 +103,8 @@ After selecting the desired values on the sliders, just click on the button "Gen
 #### Matrix Occupancy 
 This plots a graph with samples on rows and loci on columns. Samples are ordered according to number of loci and loci are ordered according to number of samples. If a locus was obtained for a given sample, the cell is painted black. It is painted white otherwise.
 
+Users can control the height of the matrix by using the slider on the top right. Sizes there are too small might result in an error message. If that happens, one simply needs to increase the size and generate the graph again.
+
 #### Histogram
 This shows a histogram of the number of loci obtained by sample. Red ticks at the bottom correspond to individual samples.
 
