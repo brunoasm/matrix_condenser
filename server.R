@@ -134,6 +134,13 @@ shinyServer(function(input, output) {
     sliderInput("graphExpansion", "Graph Expansion:", 5, 100, 80, step = 1, post = ' %', ticks = FALSE)
   })
   
+  output$graphBlock <- renderUI({
+    if (is.null(input$locifile)) return(NULL)
+    checkboxInput("graphBlock", "Order by shared loci", value = FALSE)
+  }
+  
+  )
+  
   #create reactives to make action button work
   
   observeEvent(input$go, {
@@ -154,6 +161,11 @@ shinyServer(function(input, output) {
     v$graphExpansion <- input$graphExpansion
   })
   
+  observeEvent(input$graphBlock, {
+    v$doPlot <- FALSE
+    v$graphBlock <- input$graphBlock
+  })
+  
   #Generate a reactive for reducing matrix
   reduce_matrix <- reactive({withProgress({
     #first, remove loci below mincov
@@ -169,16 +181,31 @@ shinyServer(function(input, output) {
     loci_to_keep <- apply(reduced_matrix, 2, sum) >= input$mincov
     reduced_matrix <- reduced_matrix[,loci_to_keep]
     
-    nloci = apply(reduced_matrix,1,sum)
-    nsamples = apply(reduced_matrix,2,sum)
     
-    reduced_matrix = reduced_matrix[order(nloci),order(nsamples,decreasing = T)]
+    
+    
+    if (v$graphBlock){
+      pca = prcomp(t(reduced_matrix))
+      loci_order = order(pca$rotation[,1])
+      sample_order = order(pca$x[,1])
+      reduced_matrix = reduced_matrix[loci_order,sample_order]
+      
+      
+    } else {
+      nloci = apply(reduced_matrix,1,sum)
+      nsamples = apply(reduced_matrix,2,sum)
+      reduced_matrix = reduced_matrix[order(nloci),order(nsamples,decreasing = T)]
+      
+    }
+    
+    
+    
     
     #now save variables to be used by other expressions
     v$samples_to_remove <- samples_to_remove
     v$samples_to_include <- samples_to_include
     v$reduced_matrix <- reduced_matrix
-  },message = 'Rendering output')
+  },value = 1, message = 'Rendering output')
   })
   
   #Plot graph when action button is pressed
