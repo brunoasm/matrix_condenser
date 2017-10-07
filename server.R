@@ -129,6 +129,11 @@ shinyServer(function(input, output) {
     sliderInput("mincov", "Minimum number of samples in a locus:", 0, dim(samples_vs_loci())[1]-input$nremove, min(init, dim(samples_vs_loci())[1]-input$nremove), step = 1)
   })
   
+  output$whatRemoveInput <- renderUI({
+    if (is.null(input$locifile)) return(NULL)
+    checkboxInput("whatRemove", "Remove loci prior to samples", value = TRUE)
+  })
+  
   output$graphExpansion <- renderUI({
     if (is.null(input$locifile)) return(NULL)
     sliderInput("graphExpansion", "Graph Expansion:", 5, 100, 80, step = 1, post = ' %', ticks = FALSE)
@@ -156,6 +161,11 @@ shinyServer(function(input, output) {
     v$last_value <- input$mincov
   })
   
+  observeEvent(input$whatRemove, {
+    v$doPlot <- FALSE
+    v$loci_first <- input$whatRemove
+  })
+  
   observeEvent(input$graphExpansion, {
     v$doPlot <- FALSE
     v$graphExpansion <- input$graphExpansion
@@ -168,6 +178,7 @@ shinyServer(function(input, output) {
   
   #Generate a reactive for reducing matrix
   reduce_matrix <- reactive({withProgress({
+    if (v$loci_first){
     #first, remove loci below mincov
     loci_to_keep <- apply(samples_vs_loci(), 2, sum) >= input$mincov
     reduced_matrix <- samples_vs_loci()[,loci_to_keep]
@@ -180,7 +191,17 @@ shinyServer(function(input, output) {
     reduced_matrix <-samples_vs_loci()[is.na(match(rownames(samples_vs_loci()), samples_to_remove)), ]
     loci_to_keep <- apply(reduced_matrix, 2, sum) >= input$mincov
     reduced_matrix <- reduced_matrix[,loci_to_keep]
-    
+    }
+    else {
+      #first, remove the worst samples
+      reduced_matrix = samples_vs_loci()
+      samples_to_remove <- sort(rownames(reduced_matrix)[rank(apply(reduced_matrix, 1, sum),ties.method="max") <= input$nremove])
+      samples_to_include <- sort(setdiff(rownames(reduced_matrix),samples_to_remove))
+      
+      reduced_matrix <-samples_vs_loci()[is.na(match(rownames(samples_vs_loci()), samples_to_remove)), ]
+      loci_to_keep <- apply(reduced_matrix, 2, sum) >= input$mincov
+      reduced_matrix <- reduced_matrix[,loci_to_keep]
+    }
     
     
     

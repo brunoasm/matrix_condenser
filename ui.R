@@ -22,6 +22,7 @@ shinyUI(fluidPage(
       uiOutput("downloadOutput"), #button to download occupancy matrix
       uiOutput("mincovInput"), #slide bar with minCov, limits depend on file chosen
       uiOutput("NremoveInput"), #slide bar with number of bad samples to remove, limits depend on file chosen
+      uiOutput("whatRemoveInput"), #slide bar with number of bad samples to remove, limits depend on file chosen
       actionButton("go", "Generate graph"),
       tags$div(class="header", checked=NA, tags$p(),
                tags$p("Source code and manual on github:", tags$a(href="https://github.com/brunoasm/matrix_condenser", "brunoasm/matrix_condenser", target="_blank")))
@@ -32,7 +33,7 @@ shinyUI(fluidPage(
       tabsetPanel(
         tabPanel("Matrix Occupancy", 
                  fluidRow(column(helpText('Black: locus present, White: locus absent'),
-                                 width = 6,
+                                 width = 5,
                                  offset = 0.5),
                           column(uiOutput("graphExpansion"),width = 2,offset = 0.5),
                           column(uiOutput("graphBlock"), width = 2, offset = 0)),

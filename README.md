@@ -97,11 +97,15 @@ After the input file is parsed, the user can select how many samples to remove u
 
 The user can also select a minimum coverage per locus, i. e. a minimum number of samples to be recovered for each locus.
 
+The user can also select whether loci or samples should be excluded first. The default is to exclude loci first, which would mimic the behavior of only assembling loci above a certain threshold of missing data, and then deleting samples that have little data. The alternative is first to remove samples that generally yielded less data. This should only make a difference in datasets in which some sets of samples share sets of loci with each other (for example, if there are two species with several populations each).
+
 After selecting the desired values on the sliders, just click on the button "Generate Graph". If the sliders are moved, the button has to be pressed again to generate the new graph.
 
 ### Output tabs
 #### Matrix Occupancy 
-This plots a graph with samples on rows and loci on columns. Samples are ordered according to number of loci and loci are ordered according to number of samples. If a locus was obtained for a given sample, the cell is painted black. It is painted white otherwise.
+This plots a graph with samples on rows and loci on columns. By default, samples are ordered according to number of loci and loci are ordered according to number of samples. If a locus was obtained for a given sample, the cell is painted black. It is painted white otherwise.
+
+Users can choose to reorder samples and loci by blocks of shared loci. This can make it easier to observe if different samples shared some set of loci. In RAD data, this can arise from locus dropout due to relatedness between samples or due to methodological artifacts, such as differences in size selection.
 
 Users can control the height of the matrix by using the slider on the top right. Sizes there are too small might result in an error message. If that happens, one simply needs to increase the size and generate the graph again.
 
