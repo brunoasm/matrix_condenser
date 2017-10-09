@@ -46,14 +46,15 @@ parseLociFile <- function(input_path){
                        seqlines = c(seqlines,line)
                      } else {
                        samples = gsub('\\s.*$','',seqlines)
+                       samples = samples[samples != ''] #sometimes ipyrad makes blank lines, this removes them
                        loci[[locus]] = rep(TRUE,length(samples))
                        names(loci[[locus]]) = samples
                        
                        locus = locus + 1
                        loci[[locus]] = logical()
                        seqlines = character()
+                       }
                      }
-                   }
                    incProgress(0.5)
                    
                  }
