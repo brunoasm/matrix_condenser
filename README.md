@@ -93,11 +93,18 @@ Parsing takes a while, so when it is done, a button with the option to download 
 Usually, I run ipyrad from steps 1-7, keeping all loci shared by at least 4 samples. I then upload the `*.loci` file obtained in this first run as input in this web app to get an idea of what minimum coverage I should use and which samples I should exclude to obtain a dataset with less missing data.
 
 
-After the input file is parsed, the user can select how many samples to remove using a sliding bar. This will remove the samples that have less overlap with other samples in the dataset, given value of minimum number of samples per locus.
+After the input file is parsed, the user has several options to remove samples and loci from the dataset:
 
-The user can also select a minimum coverage per locus, i. e. a minimum number of samples to be recovered for each locus.
-
-The user can also select whether loci or samples should be excluded first. The default is to exclude loci first, which would mimic the behavior of only assembling loci above a certain threshold of missing data, and then deleting samples that have little data. The alternative is first to remove samples that generally yielded less data. This should only make a difference in datasets in which some sets of samples share sets of loci with each other (for example, if there are two species with several populations each).
+**1. Select specific samples to be removed and then a minimum number of samples per loci**
+  
+  To select specific sampels for removal, one has to open a dialog box using the button **Choose which samples to remove from dataset** and choose which samples to remove. Then use the slider to select a minimum number of samples per locus. 
+  Opening the dialogue overrides any values selected in the slider to remove bad samples and the option to remove loci first.
+  
+**2. Use criteria of minimum coverage to determine which samples and loci to remove**
+  
+   To remove samples with lowest number of loci, one has simply to select the desired values for minimum samples for a locus and number of bad samples to remove in the sliders. If the slider for number of bad samples is moved, it overrides any sample selection done with the dialog box.
+  
+  If **Remove loci prior to samples** is checked, then we will first apply the minimum coverage per locus and then remove the selected number of samples with fewest loci in this reduced matrix. Otherwise, samples are removed based on the number of loci recovered for the full dataset. This should only make a difference in datasets in which some sets of samples share sets of loci with each other (for example, if there are two species with several populations each, and severe locus dropout between species in RAD-seq). If loci are missing randomly due to differences in sequencing coverage, the result should be similar.
 
 After selecting the desired values on the sliders, just click on the button "Generate Graph". If the sliders are moved, the button has to be pressed again to generate the new graph.
 

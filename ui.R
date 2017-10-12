@@ -22,7 +22,8 @@ shinyUI(fluidPage(
       uiOutput("downloadOutput"), #button to download occupancy matrix
       uiOutput("mincovInput"), #slide bar with minCov, limits depend on file chosen
       uiOutput("NremoveInput"), #slide bar with number of bad samples to remove, limits depend on file chosen
-      uiOutput("whatRemoveInput"), #slide bar with number of bad samples to remove, limits depend on file chosen
+      uiOutput("removeSpecific"), #button to choose which samples to remove
+      uiOutput("whatRemoveInput"), #checkbox with option to remove samples prior to loci
       actionButton("go", "Generate graph"),
       tags$div(class="header", checked=NA, tags$p(),
                tags$p("Source code and manual on github:", tags$a(href="https://github.com/brunoasm/matrix_condenser", "brunoasm/matrix_condenser", target="_blank")))

@@ -87,7 +87,7 @@ parseOccMat <- function(input_path){
 
 shinyServer(function(input, output) {
   #v will store values used accross reactive expressions, starting by plotting indicator
-  v <- reactiveValues(doPlot = FALSE, reduced_matrix = matrix(NA,nrow = 1,ncol=1))
+  v <- reactiveValues(doPlot = FALSE, reduced_matrix = matrix(NA,nrow = 1,ncol=1), checkedSamples = c())
   
   # first, open and parse input file.
   # this is a reactive, so it will only be done once for each input file
@@ -135,6 +135,11 @@ shinyServer(function(input, output) {
     checkboxInput("whatRemove", "Remove loci prior to samples", value = TRUE)
   })
   
+  output$removeSpecific <- renderUI({
+    if (is.null(input$locifile)) return(NULL)
+    actionButton("removeSpecific","Choose which samples to remove")
+  })
+  
   output$graphExpansion <- renderUI({
     if (is.null(input$locifile)) return(NULL)
     sliderInput("graphExpansion", "Graph Expansion:", 5, 100, 80, step = 1, post = ' %', ticks = FALSE)
@@ -154,6 +159,7 @@ shinyServer(function(input, output) {
   })
   
   observeEvent(input$nremove, {
+    v$checkedSamples <- c()
     v$doPlot <- FALSE
   })
   
@@ -167,6 +173,24 @@ shinyServer(function(input, output) {
     v$loci_first <- input$whatRemove
   })
   
+  observeEvent(input$removeSpecific, {
+    showModal(modalDialog(
+      title = "Choose which samples to remove from dataset:",
+      "Attention: this overrides removal of bad samples!",
+      checkboxGroupInput("checkboxRemove",
+                    "Check samples to be removed:",
+                    choices = sort(rownames(samples_vs_loci())),
+                    selected = v$checkedSamples), #gives all samples as options
+      easyClose=FALSE
+    ))
+  })
+  
+  observeEvent(input$checkboxRemove,{
+    v$checkedSamples <- input$checkboxRemove
+    v$doPlot <- FALSE
+  })
+  
+  
   observeEvent(input$graphExpansion, {
     v$doPlot <- FALSE
     v$graphExpansion <- input$graphExpansion
@@ -179,30 +203,39 @@ shinyServer(function(input, output) {
   
   #Generate a reactive for reducing matrix
   reduce_matrix <- reactive({withProgress({
-    if (v$loci_first){
-    #first, remove loci below mincov
-    loci_to_keep <- apply(samples_vs_loci(), 2, sum) >= input$mincov
-    reduced_matrix <- samples_vs_loci()[,loci_to_keep]
-    
-    #then check which samples have the least number of in loci in common
-    samples_to_remove <- sort(rownames(reduced_matrix)[rank(apply(reduced_matrix, 1, sum),ties.method="max") <= input$nremove])
-    samples_to_include <- sort(setdiff(rownames(reduced_matrix),samples_to_remove))
-    
-    #now, remove those samples from the full matrix and set mincov again
-    reduced_matrix <-samples_vs_loci()[is.na(match(rownames(samples_vs_loci()), samples_to_remove)), ]
-    loci_to_keep <- apply(reduced_matrix, 2, sum) >= input$mincov
-    reduced_matrix <- reduced_matrix[,loci_to_keep]
-    }
-    else {
-      #first, remove the worst samples
-      reduced_matrix = samples_vs_loci()
+    if (length(v$checkedSamples)){
+      #if user selected specific samples for removal, do that and then remove loci according to slider value
+      samples_to_remove <- v$checkedSamples
+      
+      reduced_matrix <-samples_vs_loci()[is.na(match(rownames(samples_vs_loci()), samples_to_remove)), ]
+      loci_to_keep <- apply(reduced_matrix, 2, sum) >= input$mincov
+      reduced_matrix <- reduced_matrix[,loci_to_keep]
+      
+    } else if (v$loci_first){ #if no specific sampels selected and loci first, remove loci and then samples according to sliders
+      #first, remove loci below mincov
+      loci_to_keep <- apply(samples_vs_loci(), 2, sum) >= input$mincov
+      reduced_matrix <- samples_vs_loci()[,loci_to_keep]
+      
+      #then check which samples have the least number of in loci in common
       samples_to_remove <- sort(rownames(reduced_matrix)[rank(apply(reduced_matrix, 1, sum),ties.method="max") <= input$nremove])
-      samples_to_include <- sort(setdiff(rownames(reduced_matrix),samples_to_remove))
+      
+      #now, remove those samples from the full matrix and set mincov again
+      reduced_matrix <-samples_vs_loci()[is.na(match(rownames(samples_vs_loci()), samples_to_remove)), ]
+      loci_to_keep <- apply(reduced_matrix, 2, sum) >= input$mincov
+      reduced_matrix <- reduced_matrix[,loci_to_keep]
+    }
+    else { #if none of the above, remove first samples and then loci according
+      #first, remove the worst samples (or specific samples, if selected by user)
+      reduced_matrix = samples_vs_loci()
+
+      samples_to_remove <- sort(rownames(reduced_matrix)[rank(apply(reduced_matrix, 1, sum),ties.method="max") <= input$nremove])
+      
       
       reduced_matrix <-samples_vs_loci()[is.na(match(rownames(samples_vs_loci()), samples_to_remove)), ]
       loci_to_keep <- apply(reduced_matrix, 2, sum) >= input$mincov
       reduced_matrix <- reduced_matrix[,loci_to_keep]
     }
+    samples_to_include <- sort(setdiff(rownames(reduced_matrix),samples_to_remove))
     
     
     
