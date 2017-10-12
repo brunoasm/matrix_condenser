@@ -9,7 +9,11 @@ My preferred assembler, ipyrad, has the option to exclude some samples and/or se
 I wrote this app with a user interface to help me visualize the effects of excluding samples with poor coverage and changing the minimum coverage by locus. I can do this interactively here so it is quick to preview what a matrix will look like for different combinations of sample removal / minimum coverage for a locus.
 
 ## Usage
-This app can be run locally using Rstudio. There is also a web version hosted at https://bmedeiros.shinyapps.io/matrix_condenser. I use the free version of shiny, so I have some usage quota that might be exceeded if too many people use the app or the dataset is too big. In case it does not work online, simply download the repository and run locally on your computer. Apparently, if you have Rstudio and shiny package installed, you can use the command `runGitHub("brunoasm/matrix_condenser")` to download and run in your computer.
+This app can be run locally using Rstudio. There is also a web version hosted at https://bmedeiros.shinyapps.io/matrix_condenser. I use the free version of shiny, so I have some usage quota that might be exceeded if too many people use the app or the dataset is too big. In case it does not work online, simply download the repository and run locally on your computer. Apparently, if you have Rstudio and shiny package installed, you can use the command to download and run in your computer:
+```r
+library(shiny)
+runGitHub("brunoasm/matrix_condenser")
+```
 
 ### Input file types
 
