@@ -9,9 +9,15 @@ My preferred assembler, ipyrad, has the option to exclude some samples and/or se
 I wrote this app with a user interface to help me visualize the effects of excluding samples with poor coverage and changing the minimum coverage by locus. I can do this interactively here so it is quick to preview what a matrix will look like for different combinations of sample removal / minimum coverage for a locus.
 
 ## Usage
-This app can be run locally using Rstudio. There is also a web version hosted at https://bmedeiros.shinyapps.io/matrix_condenser. I use the free version of shiny, so I have some usage quota that might be exceeded if too many people use the app or the dataset is too big. In case it does not work online, simply download the repository and run locally on your computer. Apparently, if you have Rstudio and shiny package installed, you can use the command `runGitHub("brunoasm/matrix_condenser")` to download and run in your computer.
+This app can be run locally using Rstudio. There is also a web version hosted at https://bmedeiros.shinyapps.io/matrix_condenser. I use the free version of shiny, so I have some usage quota that might be exceeded if too many people use the app or the dataset is too big. In case it does not work online, simply download the repository and run locally on your computer. Apparently, if you have Rstudio and shiny package installed, you can use the command to download and run in your computer:
+```r
+library(shiny)
+runGitHub("brunoasm/matrix_condenser")
+```
 
 This app can take three kinds of input.
+
+### Input file types
 
 1. Occupancy Matrix.
 This is a comma-separated text file with the following format:
@@ -104,20 +110,20 @@ Parsing takes a while, so when it is done, a button with the option to download 
 Usually, I run ipyrad from steps 1-7, keeping all loci shared by at least 4 samples. I then upload the `*.loci` file obtained in this first run as input in this web app to get an idea of what minimum coverage I should use and which samples I should exclude to obtain a dataset with less missing data.
 
 
-After the input file is parsed, the user has several options to remove samples and loci from the dataset:
+### Options to condense matrix
 
-**1. Select specific samples to be removed and then a minimum number of samples per loci**
+After the input file is parsed, the user has several options to remove samples and loci from the dataset. After selecting the desired criteria, just click on the button "Generate Graph". If any criterion is changed, the button has to be pressed again to generate the new graph.
+
+1. Select specific samples to be removed and then a minimum number of samples per loci
   
   To select specific sampels for removal, one has to open a dialog box using the button **Choose which samples to remove from dataset** and choose which samples to remove. Then use the slider to select a minimum number of samples per locus. 
   Opening the dialogue overrides any values selected in the slider to remove bad samples and the option to remove loci first.
   
-**2. Use criteria of minimum coverage to determine which samples and loci to remove**
+2. Use criteria of minimum coverage to determine which samples and loci to remove
   
    To remove samples with lowest number of loci, one has simply to select the desired values for minimum samples for a locus and number of bad samples to remove in the sliders. If the slider for number of bad samples is moved, it overrides any sample selection done with the dialog box.
   
-  If **Remove loci prior to samples** is checked, then we will first apply the minimum coverage per locus and then remove the selected number of samples with fewest loci in this reduced matrix. Otherwise, samples are removed based on the number of loci recovered for the full dataset. This should only make a difference in datasets in which some sets of samples share sets of loci with each other (for example, if there are two species with several populations each, and severe locus dropout between species in RAD-seq). If loci are missing randomly due to differences in sequencing coverage, the result should be similar.
-
-After selecting the desired values on the sliders, just click on the button "Generate Graph". If the sliders are moved, the button has to be pressed again to generate the new graph.
+  If **Remove loci prior to samples** is checked, then we will first apply the minimum coverage per locus and then remove the selected number of samples with fewest loci in this reduced matrix. Otherwise, samples are removed based on the number of loci recovered for the full dataset. This should only make a difference in datasets in which some sets of samples share sets of loci with each other (for example, if there are two species with several populations each, and severe locus dropout between species in RAD-seq). If loci are missing randomly due to differences in sequencing coverage, removing loci or samples first should make little difference.
 
 ### Output tabs
 #### Matrix Occupancy 
