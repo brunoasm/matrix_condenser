@@ -103,12 +103,10 @@ parseVCF <- function(input_path){
     )
     vcf = apply(vcf@gt[,-1],
                 c(2,1),
-                function(x){grepl('^\\./\\.',x)})
+                function(x){!grepl('^\\./\\.',x)})
   },
   message = 'Parsing VCF file',value = 1)
 
-  
-  a=1
   return(vcf)
 }
 
