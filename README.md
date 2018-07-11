@@ -18,9 +18,9 @@ runGitHub("brunoasm/matrix_condenser")
 ### Input file types
 
 This app can take three kinds of input:
-1. Occupancy Matrix
-2. VCF files
-3. `*.loci` output from ipyrad.
+1. [Occupancy Matrix](#occupancy-matrix)
+2. [VCF files](#vcf-files)
+3. [`*.loci` output from ipyrad](#loci-output-from-ipyrad)
 
 ### Occupancy Matrix
 This is a comma-separated text file with the following format:
