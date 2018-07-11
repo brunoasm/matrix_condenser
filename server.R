@@ -7,6 +7,8 @@
 
 library(shiny)
 library(plyr)
+library(vcfR)
+
 options(shiny.maxRequestSize=1000*1024^2) 
 
 
@@ -75,14 +77,39 @@ parseLociFile <- function(input_path){
 }
 
 parseOccMat <- function(input_path){
-  occmat <- as.matrix(read.csv(file = input_path, header = T, row.names = 1, as.is = T))
   validate(
-    need({dim(occmat)[2] > 0}, message = "Input not an occupancy matrix, check file type!")
+    need(
+      try({occmat = as.matrix(read.csv(file = input_path, header = T, row.names = 1, as.is = T))}), 
+      message = 'Error reading input. Check if properly formatted occupancy matrix.'
+    )
+  )
+  
+  
+  validate(
+    need({dim(occmat)[2] > 0}, message = "Input not an occupancy matrix, check file type.")
   )
   samples = row.names(occmat)
   occmat = apply(occmat,2,as.logical)
   row.names(occmat) = samples
   return(occmat)
+}
+
+parseVCF <- function(input_path){
+  withProgress({
+    validate(
+      need(
+        try({vcf = read.vcfR(input_path)}), message = "Error parsing VCF, check file type."
+      )
+    )
+    vcf = apply(vcf@gt[,-1],
+                c(2,1),
+                function(x){grepl('^\\./\\.',x)})
+  },
+  message = 'Parsing VCF file',value = 1)
+
+  
+  a=1
+  return(vcf)
 }
 
 shinyServer(function(input, output) {
@@ -94,7 +121,8 @@ shinyServer(function(input, output) {
   filetype <- reactive({
     switch(input$filetype,
            "Occupancy Matrix" = "occmatrix",
-           "ipyrad *.loci" = "ipyrad_loci")
+           "ipyrad *.loci" = "ipyrad_loci",
+           "VCF" = "vcf")
   })
   
   samples_vs_loci <- reactive({
@@ -102,6 +130,8 @@ shinyServer(function(input, output) {
       parseLociFile(input$locifile$datapath)
     } else if (filetype() == "occmatrix"){
       parseOccMat(input$locifile$datapath)
+    } else if(filetype() == "vcf"){
+      parseVCF(input$locifile$datapath)
     }
   })
   

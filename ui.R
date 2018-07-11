@@ -16,7 +16,7 @@ shinyUI(fluidPage(
   sidebarLayout(
     sidebarPanel(
       selectInput("filetype","Choose a file type before uploading:",
-                  choices = c("Occupancy Matrix", "ipyrad *.loci")),
+                  choices = c("Occupancy Matrix", "VCF", "ipyrad *.loci")),
       fileInput("locifile", label = "Choose file to upload"),
       helpText("After file upload, wait for sliders to appear before pressing GENERATE GRAPH"),
       uiOutput("downloadOutput"), #button to download occupancy matrix
