@@ -98,7 +98,7 @@ parseVCF <- function(input_path){
   withProgress({
     validate(
       need(
-        try({vcf = read.vcfR(input_path)}), message = "Error parsing VCF, check file type."
+        try({vcf = read.vcfR(input_path,convertNA = F)}), message = "Error parsing VCF, check file type."
       )
     )
     vcf = apply(vcf@gt[,-1],
