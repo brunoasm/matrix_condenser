@@ -18,7 +18,8 @@ shinyUI(fluidPage(
       selectInput("filetype","Choose a file type before uploading:",
                   choices = c("Occupancy Matrix", "VCF", "ipyrad *.loci")),
       fileInput("locifile", label = "Choose file to upload"),
-      helpText("After file upload, wait for sliders to appear before pressing GENERATE GRAPH"),
+      helpText("After file upload, wait for sliders to show up before pressing GENERATE GRAPH."),
+      helpText("If your file is too large and parsing fails, see manual on how to run the tool locally in your computer."),
       uiOutput("downloadOutput"), #button to download occupancy matrix
       uiOutput("mincovInput"), #slide bar with minCov, limits depend on file chosen
       uiOutput("NremoveInput"), #slide bar with number of bad samples to remove, limits depend on file chosen
