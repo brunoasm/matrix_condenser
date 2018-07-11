@@ -15,11 +15,14 @@ library(shiny)
 runGitHub("brunoasm/matrix_condenser")
 ```
 
-This app can take three kinds of input.
-
 ### Input file types
 
-1. Occupancy Matrix.
+This app can take three kinds of input:
+1. Occupancy Matrix
+2. VCF files
+3. `*.loci` output from ipyrad.
+
+### Occupancy Matrix
 This is a comma-separated text file with the following format:
  * First row containing locus names 
    - **The names will be largely ignored, but this row must have the same number of columns as other rows!**
@@ -91,17 +94,18 @@ BdM1720,F,T,F,T
 BdM1739,F,T,F,T
 ```
 
-2. VCF files
+### VCF files
 
 VCF is a common file format for SNPs, produced by most pipelines. For more information about the format, see [this website](http://www.internationalgenome.org/wiki/Analysis/Variant%20Call%20Format/vcf-variant-call-format-version-40/).
 
 We use [vcfR](https://github.com/knausb/vcfR) to parse vcf files:
-Knaus BJ and Grünwald NJ (2017). “VCFR: a package to manipulate and visualize variant
-call format data in R.” _Molecular Ecology Resources_, *17*(1), pp. 44-53. ISSN 757,
-<URL: http://dx.doi.org/10.1111/1755-0998.12549>.
 
+Knaus BJ and Grünwald NJ (2017). VCFR: a package to manipulate and visualize variant
+call format data in R. _Molecular Ecology Resources_, **17**(1): 44-53. doi:[10.1111/1755-0998](12549http://dx.doi.org/10.1111/1755-0998.12549)
 
-3. `*.loci` output from ipyrad.
+When parsing VCF files, each SNP will be considered a locus.
+
+### `*.loci` output from ipyrad
 
 To parse a loci file from ipyrad into an occupancy matrix, before uploading select `ipyrad *.loci` from the drop down menu.
 
