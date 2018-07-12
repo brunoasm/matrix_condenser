@@ -136,14 +136,20 @@ shinyServer(function(input, output) {
   #Offer option to download occupancy matrix
   output$downloadMatrix <- downloadHandler(
     filename = 'occupancy_matrix.csv',
-    content = function(file){write.csv(samples_vs_loci(),file,row.names = T,col.names = T)}
+    content = function(file){
+      if(identical(v$reduced_matrix,matrix(NA,nrow = 1,ncol=1))){
+        write.csv(samples_vs_loci(),file,row.names = T,col.names = T)
+      } else {
+        write.csv(v$reduced_matrix,file,row.names = T,col.names = T)
+      }
+      
+      }
   )
   
   
   #Then, generate output button and sliders for mincov and number of samples to remove
   output$downloadOutput <- renderUI({
     if (is.null(input$locifile)) return(NULL)
-    if (filetype() == "occmatrix") return(NULL)
     downloadButton("downloadMatrix","Download occupancy matrix")
   })
   
@@ -173,12 +179,17 @@ shinyServer(function(input, output) {
     sliderInput("graphExpansion", "Graph Expansion:", 5, 100, 80, step = 1, post = ' %', ticks = FALSE)
   })
   
-  output$graphBlock <- renderUI({
+  output$sampleSort <- renderUI({
     if (is.null(input$locifile)) return(NULL)
-    checkboxInput("graphBlock", "Order by shared loci", value = FALSE)
-  }
+    selectInput("sampleSort","Sample sorting:",
+                choices = c("Decreasing", "Increasing", "Divergent", "Original"))
+  })
   
-  )
+  output$lociSort <- renderUI({
+    if (is.null(input$locifile)) return(NULL)
+    selectInput("lociSort","Locus sorting:",
+                choices = c("Decreasing", "Increasing", "Divergent", "Original"))
+  })
   
   #create reactives to make action button work
   
@@ -224,9 +235,14 @@ shinyServer(function(input, output) {
     v$graphExpansion <- input$graphExpansion
   })
   
-  observeEvent(input$graphBlock, {
+  observeEvent(input$lociSort, {
     v$doPlot <- FALSE
-    v$graphBlock <- input$graphBlock
+    v$lociSort <- input$lociSort
+  })
+  
+  observeEvent(input$sampleSort, {
+    v$doPlot <- FALSE
+    v$sampleSort <- input$sampleSort
   })
   
   #Generate a reactive for reducing matrix
@@ -267,21 +283,31 @@ shinyServer(function(input, output) {
     
     
     
-    if (v$graphBlock){
+    if (v$lociSort == "Divergent" | v$sampleSort == "Divergent"){
       pca = prcomp(t(reduced_matrix))
-      loci_order = order(pca$rotation[,1])
-      sample_order = order(pca$x[,1])
-      reduced_matrix = reduced_matrix[loci_order,sample_order]
-      
-      
-    } else {
-      nloci = apply(reduced_matrix,1,sum)
-      nsamples = apply(reduced_matrix,2,sum)
-      reduced_matrix = reduced_matrix[order(nloci),order(nsamples,decreasing = T)]
-      
     }
     
+    if (v$lociSort == "Divergent"){
+      loci_order = order(pca$x[,1])
+    } else if(v$lociSort == "Decreasing"){
+      loci_order = order(apply(reduced_matrix,2,sum),decreasing = T)
+    } else if(v$lociSort == "Increasing"){
+      loci_order = order(apply(reduced_matrix,2,sum))
+    } else {
+      loci_order = 1:dim(reduced_matrix)[2]
+    }
     
+    if (v$sampleSort == "Divergent"){
+      sample_order = order(pca$rotation[,1])
+    } else if(v$sampleSort == "Decreasing"){
+      sample_order = order(apply(reduced_matrix,1,sum))
+    } else if(v$sampleSort == "Increasing"){
+      sample_order = order(apply(reduced_matrix,1,sum), decreasing = T)
+    } else {
+      sample_order = 1:dim(reduced_matrix)[1]
+    }
+      
+      reduced_matrix = reduced_matrix[sample_order,loci_order]
     
     
     #now save variables to be used by other expressions

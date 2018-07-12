@@ -38,7 +38,11 @@ shinyUI(fluidPage(
                                  width = 5,
                                  offset = 0.5),
                           column(uiOutput("graphExpansion"),width = 2,offset = 0.5),
-                          column(uiOutput("graphBlock"), width = 2, offset = 0)),
+                          column(uiOutput("sampleSort"), width = 3, offset = 0)
+                          ),
+                 fluidRow(column(width =5, offser = 0.5),
+                          column(width =2, offset = 0.5),
+                          column(uiOutput("lociSort"), width = 3, offset = 0)),
                  verbatimTextOutput("matOccText"),
                  plotOutput("matrixOccupancy")),
         tabPanel("Histogram", plotOutput("covHist"),
