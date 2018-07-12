@@ -160,8 +160,8 @@ shinyServer(function(input, output) {
   
   output$mincovInput <- renderUI({
     if (is.null(input$locifile)) return(NULL)
-    if (length(v$last_value)){init = v$last_value} else {init = 0}
-    sliderInput("mincov", "Minimum number of samples in a locus:", 0, dim(samples_vs_loci())[1]-input$nremove, min(init, dim(samples_vs_loci())[1]-input$nremove), step = 1)
+    if (length(v$last_value)){init = v$last_value} else {init = 1}
+    sliderInput("mincov", "Minimum number of samples in a locus:", 1, dim(samples_vs_loci())[1]-input$nremove, min(init, dim(samples_vs_loci())[1]-input$nremove), step = 1)
   })
   
   output$whatRemoveInput <- renderUI({
