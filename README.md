@@ -2,11 +2,11 @@
 ## Purpose
 This tool aids in the preparation of a dataset for population genomics using RAD-seq.
 
-In my experience, it is really hard to ensure even coverage between samples prepared with ddRAD, and a lot of the missing data in the dataset can be removed by excluding a few samples that end up with with little coverage and setting a minimum number of samples per loci for the remaining samples. In a sense, condense the matrix to remove some of its empty space! The optimal number of samples, loci and missing data depends on the application, so it is nice to be able to visualize the matrix.
+In my experience, it is really hard to ensure even coverage between samples prepared with ddRAD, and a lot of the missing data in the dataset can be removed by excluding a few samples that end up with with little coverage and setting a minimum number of samples per locus. In a sense, to condense the matrix to remove some of its empty space! The optimal number of samples, loci and missing data depends on the application, so it is nice to be able to visualize the matrix.
 
-My preferred assembler, ipyrad, has the option to exclude some samples and/or set a minimum coverage by locus when generating a final dataset, and these options can be used to generate a dataset maximizing the usage of sequenced samples while minimizing missing data.
+I have mostly used [ipyrad](https://github.com/dereneaton/ipyrad) to assemble RAD data, which has the option to exclude some samples and/or set a minimum coverage by locus when generating a final dataset. These options can be used to generate a dataset maximizing the number of samples while minimizing missing data.
 
-I wrote this app with a user interface to help me visualize the effects of excluding samples with poor coverage and changing the minimum coverage by locus. I can do this interactively here so it is quick to preview what a matrix will look like for different combinations of sample removal / minimum coverage for a locus.
+I wrote this app with a user interface to help me visualize the effects of excluding samples with poor coverage and changing the minimum coverage by locus. I can do this interactively here so it is quick to preview what a matrix will look like for different combinations of sample removal / minimum coverage for a locus. It turns out other people found it useful to visualize phylogenetic structure in sequenced loci.
 
 ## Usage
 This app can be run locally using Rstudio. There is also a web version hosted at https://bmedeiros.shinyapps.io/matrix_condenser. I use the free version of shiny, so I have some usage quota that might be exceeded if too many people use the app or the dataset is too big. In case it does not work online, simply download the repository and run locally on your computer. Apparently, if you have Rstudio and shiny package installed, you can use the command to download and run in your computer:
@@ -127,14 +127,13 @@ After the input file is parsed, the user has several options to remove samples a
 
 1. Select specific samples to be removed and then a minimum number of samples per loci
   
-  To select specific sampels for removal, one has to open a dialog box using the button **Choose which samples to remove from dataset** and choose which samples to remove. Then use the slider to select a minimum number of samples per locus. 
-  Opening the dialogue overrides any values selected in the slider to remove bad samples and the option to remove loci first.
+  To select specific sampels for removal, one has to open a dialog box using the button **Choose which samples to remove from dataset** and choose which samples to remove. Then use the slider to select a minimum number of samples per locus. Opening the dialogue overrides any values selected in the slider to remove bad samples and the option to remove loci first.
   
 2. Use criteria of minimum coverage to determine which samples and loci to remove
   
    To remove samples with lowest number of loci, one has simply to select the desired values for minimum samples for a locus and number of bad samples to remove in the sliders. If the slider for number of bad samples is moved, it overrides any sample selection done with the dialog box.
   
-  If **Remove loci prior to samples** is checked, then we will first apply the minimum coverage per locus and then remove the selected number of samples with fewest loci in this reduced matrix. Otherwise, samples are removed based on the number of loci recovered for the full dataset. This should only make a difference in datasets in which some sets of samples share sets of loci with each other (for example, if there are two species with several populations each, and severe locus dropout between species in RAD-seq). If loci are missing randomly due to differences in sequencing coverage, removing loci or samples first should make little difference.
+If **Remove loci prior to samples** is checked, then we will first apply the minimum coverage per locus and then remove the selected number of samples with fewest loci in this reduced matrix. Otherwise, samples are removed based on the number of loci recovered for the full dataset. This should only make a difference in datasets in which some sets of samples share sets of loci with each other (for example, if there are two species with several populations each, and severe locus dropout between species in RAD-seq). If loci are missing randomly due to differences in sequencing coverage, removing loci or samples first should make little difference.
 
 ### Output tabs
 #### Matrix Occupancy 
