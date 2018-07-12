@@ -2,11 +2,11 @@
 ## Purpose
 This tool aids in the preparation of a dataset for population genomics using RAD-seq.
 
-In my experience, it is really hard to ensure even coverage between samples prepared with ddRAD, and a lot of the missing data in the dataset can be removed by excluding a few samples that end up with with little coverage and setting a minimum number of samples per loci for the remaining samples. In a sense, condense the matrix to remove some of its empty space! The optimal number of samples, loci and missing data depends on the application, so it is nice to be able to visualize the matrix.
+In my experience, it is really hard to ensure even coverage between samples prepared with ddRAD, and a lot of the missing data in the dataset can be removed by excluding a few samples that end up with with little coverage and setting a minimum number of samples per locus. In a sense, to condense the matrix to remove some of its empty space! The optimal number of samples, loci and missing data depends on the application, so it is nice to be able to visualize the matrix.
 
-My preferred assembler, ipyrad, has the option to exclude some samples and/or set a minimum coverage by locus when generating a final dataset, and these options can be used to generate a dataset maximizing the usage of sequenced samples while minimizing missing data.
+I have mostly used [ipyrad](https://github.com/dereneaton/ipyrad) to assemble RAD data, which has the option to exclude some samples and/or set a minimum coverage by locus when generating a final dataset. These options can be used to generate a dataset maximizing the number of samples while minimizing missing data.
 
-I wrote this app with a user interface to help me visualize the effects of excluding samples with poor coverage and changing the minimum coverage by locus. I can do this interactively here so it is quick to preview what a matrix will look like for different combinations of sample removal / minimum coverage for a locus.
+I wrote this app with a user interface to help me visualize the effects of excluding samples with poor coverage and changing the minimum coverage by locus. I can do this interactively here so it is quick to preview what a matrix will look like for different combinations of sample removal / minimum coverage for a locus. It turns out other people found it useful to visualize phylogenetic structure in sequenced loci.
 
 ## Usage
 This app can be run locally using Rstudio. There is also a web version hosted at https://bmedeiros.shinyapps.io/matrix_condenser. I use the free version of shiny, so I have some usage quota that might be exceeded if too many people use the app or the dataset is too big. In case it does not work online, simply download the repository and run locally on your computer. Apparently, if you have Rstudio and shiny package installed, you can use the command to download and run in your computer:
@@ -113,11 +113,9 @@ Parsing takes a while. When it is done, a button with the option to download the
 
 Downloading might also be useful to generate publication-quality figures. Look into the following options to do that in R from an occupancy matrix:
 
- * Package `graphics`: [image](https://www.rdocumentation.org/packages/graphics/versions/3.5.1/topics/image)
- This is what I use here, it can handle a matrix directly.
+ * R base graphics: [image](https://www.rdocumentation.org/packages/graphics/versions/3.5.1/topics/image). This is what I use here, `image` can handle a matrix directly.
  
- * Package `ggplot2`: [geom_raster](https://ggplot2.tidyverse.org/reference/geom_tile.html)
- You will first need to use [gather](https://tidyr.tidyverse.org/reference/gather.html) from package `tidyr` to create a `data.frame` in the format that ggplot likes.
+ * Package `ggplot2`: [geom_raster](https://ggplot2.tidyverse.org/reference/geom_tile.html). You will first need to use [gather](https://tidyr.tidyverse.org/reference/gather.html) from package `tidyr` to create a `data.frame` in the format that ggplot likes.
  
 
 Usually, I run ipyrad from steps 1-7, keeping all loci shared by at least 4 samples. I then upload the `*.loci` file obtained in this first run as input in this web app to get an idea of what minimum coverage I should use and which samples I should exclude to obtain a dataset with less missing data.
@@ -129,33 +127,28 @@ After the input file is parsed, the user has several options to remove samples a
 
 1. Select specific samples to be removed and then a minimum number of samples per loci
   
-  To select specific sampels for removal, one has to open a dialog box using the button **Choose which samples to remove from dataset** and choose which samples to remove. Then use the slider to select a minimum number of samples per locus. 
-  Opening the dialogue overrides any values selected in the slider to remove bad samples and the option to remove loci first.
+  To select specific sampels for removal, one has to open a dialog box using the button **Choose which samples to remove from dataset** and choose which samples to remove. Then use the slider to select a minimum number of samples per locus. Opening the dialogue overrides any values selected in the slider to remove bad samples and the option to remove loci first.
   
 2. Use criteria of minimum coverage to determine which samples and loci to remove
   
    To remove samples with lowest number of loci, one has simply to select the desired values for minimum samples for a locus and number of bad samples to remove in the sliders. If the slider for number of bad samples is moved, it overrides any sample selection done with the dialog box.
   
-  If **Remove loci prior to samples** is checked, then we will first apply the minimum coverage per locus and then remove the selected number of samples with fewest loci in this reduced matrix. Otherwise, samples are removed based on the number of loci recovered for the full dataset. This should only make a difference in datasets in which some sets of samples share sets of loci with each other (for example, if there are two species with several populations each, and severe locus dropout between species in RAD-seq). If loci are missing randomly due to differences in sequencing coverage, removing loci or samples first should make little difference.
+If **Remove loci prior to samples** is checked, then we will first apply the minimum coverage per locus and then remove the selected number of samples with fewest loci in this reduced matrix. Otherwise, samples are removed based on the number of loci recovered for the full dataset. This should only make a difference in datasets in which some sets of samples share sets of loci with each other (for example, if there are two species with several populations each, and severe locus dropout between species in RAD-seq). If loci are missing randomly due to differences in sequencing coverage, removing loci or samples first should make little difference.
 
 ### Output tabs
 #### Matrix Occupancy 
 This plots a graph with samples on rows and loci on columns. By default, samples are ordered according to number of loci and loci are ordered according to number of samples. If a locus was obtained for a given sample, the cell is painted black. It is painted white otherwise.
 
 Users can choose to reorder samples and loci independently. This can make it easier to observe if different samples shared some set of loci. In RAD data, this can arise from relatedness between samples or due to methodological artifacts, such as differences in size selection. The four options available to sort are:
- 1. Decreasing (default)
- Loci are sorted from those present in highest number of samples to those in lowest. Conversely, samples are sorted from those with highest number of loci to those with lowest number.
+ 1. **Decreasing (default):** loci are sorted from those present in highest number of samples to those in lowest. Conversely, samples are sorted from those with highest number of loci to those with lowest number.
  
- 2. Increasing
- The inverse of previous option.
+ 2. **Increasing:** the inverse of previous option.
  
- 3. Divergent
- A PCA is done behind the scenes to sort loci/samples while maximizing their divergence. Very useful for a quick glance at deterministic differences between loci in sets of samples.
+ 3. **Divergent:** a PCA is done behind the scenes to sort loci/samples while maximizing their differences. Very useful for a quick glance at deterministic differences between loci in sets of samples.
  
- 4. Original
- Matrix is not reordered, keeping the order in input. This wasn't highly tested yet, I expect to work better with VCF files and Occupancy Matrices. Not sure what to expect for ipyrad files.
+ 4. **Original:** matrix is not reordered, keeping the order in input. This wasn't widely tested yet, please let me know if you run into problems.
 
-Users can control the height of the matrix by using the slider on the top right. Sizes there are too small might result in an error message. If that happens, one simply needs to increase the size and generate the graph again.
+Users can control the height of the matrix by using the slider on the top right. Sizes that are too small might result in an error message. If that happens, one simply needs to increase the size and generate the graph again.
 
 #### Histogram
 This shows a histogram of the number of loci obtained by sample. Red ticks at the bottom correspond to individual samples.
@@ -172,10 +165,10 @@ If you havce an occupancy matrix as described above, the tool can read it and yo
 ## Author information and citation
 Bruno A. S. de Medeiros, Harvard University
 
-For now I haven't used this tool in a publication yet, I will updated the information once it is done. If you find it useful for your paper, please cite the program directly:
+My first publication using Matrix Condenser is coming up. For now, please use the following:
 
 ```
-de Medeiros, B. A. S. 2017. Matrix condenser. Retrieved from http:/github.com/brunoasm/matrix_condenser
+de Medeiros BAS & Farrel BD. In press. Whole-genome amplification in double-digest RADseq results in adequate libraries but fewer sequenced loci. PeerJ.
 ```
 
 
