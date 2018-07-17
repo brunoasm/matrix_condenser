@@ -164,10 +164,11 @@ If you havce an occupancy matrix as described above, the tool can read it and yo
 
 ## Author information and citation
 Bruno A. S. de Medeiros, Harvard University
-
-My first publication using Matrix Condenser is coming up. For now, please use the following:
-
-   de Medeiros BAS, Farrell BD. (2018) Whole-genome amplification in double-digest RADseq results in adequate libraries but fewer sequenced loci. PeerJ 6:e5089 https://doi.org/10.7717/peerj.5089
-
-
 http://scholar.harvard.edu/medeiros
+
+If you like and use this app, please cite the first publication in which I used it:
+
+de Medeiros BAS, Farrell BD. (2018) Whole-genome amplification in double-digest RADseq results in adequate libraries but fewer sequenced loci. PeerJ 6:e5089 https://doi.org/10.7717/peerj.5089
+
+
+
