@@ -11,6 +11,7 @@ I wrote this app with a user interface to help me visualize the effects of exclu
 ## Usage
 This app can be run locally using Rstudio. There is also a web version hosted at https://bmedeiros.shinyapps.io/matrix_condenser. I use the free version of shiny, so I have some usage quota that might be exceeded if too many people use the app or the dataset is too big. In case it does not work online, simply download the repository and run locally on your computer. Apparently, if you have Rstudio and shiny package installed, you can use the command to download and run in your computer:
 ```r
+if (!require("shiny")) install.packages("shiny")
 library(shiny)
 runGitHub("brunoasm/matrix_condenser")
 ```
