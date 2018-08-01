@@ -5,6 +5,10 @@
 # http://shiny.rstudio.com
 #
 
+if (!require("shiny")) install.packages("shiny")
+if (!require("plyr")) install.packages("plyr")
+if (!require("vcfR")) install.packages("vcfR")
+
 library(shiny)
 library(plyr)
 library(vcfR)
