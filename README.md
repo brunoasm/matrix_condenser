@@ -6,10 +6,10 @@ In my experience, it is really hard to ensure even coverage between samples prep
 
 I have mostly used [ipyrad](https://github.com/dereneaton/ipyrad) to assemble RAD data, which has the option to exclude some samples and/or set a minimum coverage by locus when generating a final dataset. These options can be used to generate a dataset maximizing the number of samples while minimizing missing data.
 
-I wrote this app with a user interface to help me visualize the effects of excluding samples with poor coverage and changing the minimum coverage by locus. I can do this interactively here so it is quick to preview what a matrix will look like for different combinations of sample removal / minimum coverage for a locus. It turns out other people found it useful to visualize phylogenetic structure in sequenced loci.
+I wrote this app as a graphical interface to help me visualize the effects of excluding samples with poor coverage and changing the minimum number of samples for a locus. This can be done interactively here, making it quicker to preview what a matrix will look like for different combinations of sample removal / minimum coverage for a locus. It turns out other people found it useful to visualize phylogenetic structure in sequenced loci.
 
 ## Usage
-This app can be run locally using Rstudio. There is also a web version hosted at https://bmedeiros.shinyapps.io/matrix_condenser. I use the free version of shiny, so I have some usage quota that might be exceeded if too many people use the app or the dataset is too big. In case it does not work online, simply download the repository and run locally on your computer. Apparently, if you have Rstudio and shiny package installed, you can use the command to download and run in your computer:
+This app can be run locally using R. There is also a web version hosted at https://bmedeiros.shinyapps.io/matrix_condenser. I do not pay for hosting the app, so I have some usage quota that might be exceeded if too many people use the app or the dataset is too big. In case it does not work online, simply download the repository and run locally on your computer. The following command should work to run it locally in R:
 ```r
 if (!require("shiny")) install.packages("shiny")
 library(shiny)
@@ -24,6 +24,7 @@ This app can take three kinds of input:
 3. [`*.loci` output from ipyrad](#loci-output-from-ipyrad)
 
 ### Occupancy Matrix
+
 This is a comma-separated text file with the following format:
  * First row containing locus names 
    - **The names will be largely ignored, but this row must have the same number of columns as other rows!**
