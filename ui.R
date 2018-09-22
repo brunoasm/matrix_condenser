@@ -16,7 +16,10 @@ shinyUI(fluidPage(
   sidebarLayout(
     sidebarPanel(
       selectInput("filetype","Choose a file type before uploading:",
-                  choices = c("Occupancy Matrix", "VCF", "ipyrad *.loci")),
+                  choices = c("Occupancy Matrix (sample in rows)",
+                              "Occupancy Matrix (locus in rows)",
+                              "VCF", 
+                              "ipyrad *.loci")),
       fileInput("locifile", label = "Choose file to upload"),
       helpText("After file upload, wait for sliders to show up before pressing GENERATE GRAPH."),
       helpText("If your file is too large and parsing fails, see manual on how to run the tool locally in your computer."),

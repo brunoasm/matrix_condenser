@@ -80,10 +80,15 @@ parseLociFile <- function(input_path){
   return(occmat)
 }
 
-parseOccMat <- function(input_path){
+parseOccMat <- function(input_path, transpose_mat = F){
   validate(
     need(
-      try({occmat = as.matrix(read.csv(file = input_path, header = T, row.names = 1, as.is = T))}), 
+      try({
+        occmat = as.matrix(read.csv(file = input_path, header = T, row.names = 1, as.is = T))
+        if (transpose_mat){
+          occmat = t(occmat)
+        }
+        }), 
       message = 'Error reading input. Check if properly formatted occupancy matrix.'
     )
   )
@@ -122,7 +127,8 @@ shinyServer(function(input, output) {
   # this is a reactive, so it will only be done once for each input file
   filetype <- reactive({
     switch(input$filetype,
-           "Occupancy Matrix" = "occmatrix",
+           "Occupancy Matrix (sample in rows)" = "occmatrixw",
+           "Occupancy Matrix (locus in rows)" = "occmatrixl",
            "ipyrad *.loci" = "ipyrad_loci",
            "VCF" = "vcf")
   })
@@ -130,8 +136,10 @@ shinyServer(function(input, output) {
   samples_vs_loci <- reactive({
     if (filetype() == "ipyrad_loci"){
       parseLociFile(input$locifile$datapath)
-    } else if (filetype() == "occmatrix"){
-      parseOccMat(input$locifile$datapath)
+    } else if (filetype() == c("occmatrixw")){
+      parseOccMat(input$locifile$datapath, transpose_mat = F)
+    } else if (filetype() == c("occmatrixl")){
+      parseOccMat(input$locifile$datapath, transpose_mat = T)
     } else if(filetype() == "vcf"){
       parseVCF(input$locifile$datapath)
     }
