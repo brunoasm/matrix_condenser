@@ -23,7 +23,7 @@ This app can take three kinds of input:
 2. [VCF files](#vcf-files)
 3. [`*.loci` output from ipyrad](#loci-output-from-ipyrad)
 
-### Occupancy Matrix (locus in rows)
+### Occupancy Matrix (sample in rows)
 
 This is a comma-separated text file with the following format:
  * First row containing locus names 
