@@ -15,7 +15,7 @@ shinyUI(fluidPage(
   # Sidebar with a slider input for number of bins
   sidebarLayout(
     sidebarPanel(
-      selectInput("filetype","Choose a file type before uploading:",
+      selectInput("filetype","Choose a file type BEFORE uploading:",
                   choices = c("Occupancy Matrix (sample in rows)",
                               "Occupancy Matrix (locus in rows)",
                               "VCF", 

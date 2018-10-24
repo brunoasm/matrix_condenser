@@ -81,15 +81,17 @@ parseLociFile <- function(input_path){
 }
 
 parseOccMat <- function(input_path, transpose_mat = F){
-  validate(
+ validate(
     need(
       try({
         occmat = as.matrix(read.csv(file = input_path, header = T, row.names = 1, as.is = T))
         if (transpose_mat){
           occmat = t(occmat)
+        } else {
+          occmat = occmat
         }
         }), 
-      message = 'Error reading input. Check if properly formatted occupancy matrix.'
+      'Error reading input. Check if properly formatted occupancy matrix.'
     )
   )
   
