@@ -9,7 +9,7 @@ I have mostly used [ipyrad](https://github.com/dereneaton/ipyrad) to assemble RA
 I wrote this app as a graphical interface to help me visualize the effects of excluding samples with poor coverage and changing the minimum number of samples for a locus. This can be done interactively here, making it quicker to preview what a matrix will look like for different combinations of sample removal / minimum coverage for a locus. It turns out other people found it useful to visualize phylogenetic structure in sequenced loci.
 
 ## Usage
-This app can be run locally using R. There is also a web version hosted at https://bmedeiros.shinyapps.io/matrix_condenser. I do not pay for hosting the app, so I have some usage quota that might be exceeded if too many people use the app or the dataset is too big. In case it does not work online, simply download the repository and run locally on your computer. The following command should work to run it locally in R:
+This app can be run locally using R. There is also a web version hosted at https://bmedeiros.shinyapps.io/matrix_condenser. The app is hosted on a Shiny server with a free account, so the usage quota that might be exceeded if too many people access it or the dataset is too big. In case it does not work online, simply download the repository and run locally on your computer. The following command should work to run it locally in R:
 ```r
 if (!require("shiny")) install.packages("shiny")
 library(shiny)
