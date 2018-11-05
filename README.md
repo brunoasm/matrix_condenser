@@ -134,7 +134,7 @@ After the input file is parsed, the user has several options to remove samples a
 
 1. Select specific samples to be removed and then a minimum number of samples per loci
   
-  To select specific sampels for removal, one has to open a dialog box using the button **Choose which samples to remove from dataset** and choose which samples to remove. Then use the slider to select a minimum number of samples per locus. Opening the dialogue overrides any values selected in the slider to remove bad samples and the option to remove loci first.
+   To select specific sampels for removal, one has to open a dialog box using the button **Choose which samples to remove from dataset** and choose which samples to remove. Then use the slider to select a minimum number of samples per locus. Opening the dialogue overrides any values selected in the slider to remove bad samples and the option to remove loci first.
   
 2. Use criteria of minimum coverage to determine which samples and loci to remove
   
