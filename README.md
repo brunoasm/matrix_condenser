@@ -98,7 +98,7 @@ BdM1739,F,T,F,T
 
 ### Occupancy Matrix (locus in rows)
 
-Same as previous format, but with loci in rows and sampled in columns
+Same as previous format, but with loci in rows and samples in columns
 
 
 ### VCF files
@@ -110,7 +110,7 @@ We use [vcfR](https://github.com/knausb/vcfR) to parse vcf files:
 Knaus BJ and Grünwald NJ (2017). VCFR: a package to manipulate and visualize variant
 call format data in R. _Molecular Ecology Resources_, **17**(1): 44-53. doi:[10.1111/1755-0998](12549http://dx.doi.org/10.1111/1755-0998.12549)
 
-When parsing VCF files, each SNP will be considered a locus.
+When parsing VCF files, each SNP will be considered a locus, regardless of their linkage.
 
 ### `*.loci` output from ipyrad
 
@@ -122,7 +122,7 @@ Downloading might also be useful to generate publication-quality figures. Look i
 
  * R base graphics: [image](https://www.rdocumentation.org/packages/graphics/versions/3.5.1/topics/image). This is what I use here, `image` can handle a matrix directly.
  
- * Package `ggplot2`: [geom_raster](https://ggplot2.tidyverse.org/reference/geom_tile.html). You will first need to use [gather](https://tidyr.tidyverse.org/reference/gather.html) from package `tidyr` to create a `data.frame` in the format that ggplot likes.
+ * Package `ggplot2`: [geom_tile](https://ggplot2.tidyverse.org/reference/geom_tile.html). You will first need to use [gather](https://tidyr.tidyverse.org/reference/gather.html) from package `tidyr` to create a `data.frame` in the format that ggplot likes.
  
 
 Usually, I run ipyrad from steps 1-7, keeping all loci shared by at least 4 samples. I then upload the `*.loci` file obtained in this first run as input in this web app to get an idea of what minimum coverage I should use and which samples I should exclude to obtain a dataset with less missing data.
