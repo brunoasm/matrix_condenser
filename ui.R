@@ -22,7 +22,7 @@ shinyUI(fluidPage(
                               "ipyrad *.loci")),
       fileInput("locifile", label = "Choose file to upload"),
       helpText("After file upload, wait for sliders to show up before pressing GENERATE GRAPH."),
-      helpText("If your file is too large and parsing fails, see manual on how to run the tool locally in your computer."),
+      helpText("If your file is too large and parsing fails, see manual to run the tool locally in your computer."),
       uiOutput("downloadOutput"), #button to download occupancy matrix
       uiOutput("mincovInput"), #slide bar with minCov, limits depend on file chosen
       uiOutput("NremoveInput"), #slide bar with number of bad samples to remove, limits depend on file chosen
@@ -30,7 +30,7 @@ shinyUI(fluidPage(
       uiOutput("whatRemoveInput"), #checkbox with option to remove samples prior to loci
       actionButton("go", "Generate graph"),
       tags$div(class="header", checked=NA, tags$p(),
-               tags$p("Source code and manual on github:", tags$a(href="https://github.com/brunoasm/matrix_condenser", "brunoasm/matrix_condenser", target="_blank")))
+               tags$p("Source code, citation and manual on github:", tags$a(href="https://github.com/brunoasm/matrix_condenser", "brunoasm/matrix_condenser", target="_blank")))
     ),
 
     # Show a plot of the generated distribution
