@@ -170,9 +170,12 @@ This outputs a text box with excluded sample names and another one with included
 Bruno A. S. de Medeiros, Harvard University
 https://brunodemedeiros.me
 
-If you like and use this app, please cite the first publication in which I used it:
+If you like and use this app, please cite the first publication in which I used it as well as the software itself:
 
-de Medeiros BAS, Farrell BD. (2018) Whole-genome amplification in double-digest RADseq results in adequate libraries but fewer sequenced loci. PeerJ 6:e5089 https://doi.org/10.7717/peerj.5089
+   de Medeiros BAS, Farrell BD. (2018) Whole-genome amplification in double-digest RADseq results in adequate libraries but fewer sequenced loci. PeerJ 6:e5089 https://doi.org/10.7717/peerj.5089
+
+   de Medeiros BA. (2019) Matrix Condenser v.1.0. Available at: https://github.com/brunoasm/matrix_condenser/
+
 
 
 
