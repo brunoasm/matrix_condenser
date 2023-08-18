@@ -167,8 +167,8 @@ This shows a table with the proportion of missing loci per sample. It can be reo
 This outputs a text box with excluded sample names and another one with included sample names. This text can be easily copied and pasted to make a branch in ipyrad or a similar use in other program.
 
 ## Author information and citation
-Bruno A. S. de Medeiros, Harvard University
-https://brunodemedeiros.me
+Bruno A. S. de Medeiros, Field Museum
+https://in-flo-lab.group
 
 If you like and use this app, please cite the first publication in which I used it as well as the software itself:
 
