@@ -1,12 +1,8 @@
 # Matrix condenser
 ## Purpose
-This tool aids in the preparation of a dataset for population genomics using RAD-seq.
+This tool aids in the preparation of datasets for pupulation genomics or phylogenomics.
 
-In my experience, it is really hard to ensure even coverage between samples prepared with ddRAD, and a lot of the missing data in the dataset can be removed by excluding a few samples that end up with with little coverage and setting a minimum number of samples per locus. In a sense, to condense the matrix to remove some of its empty space! The optimal number of samples, loci and missing data depends on the application, so it is nice to be able to visualize the matrix.
-
-I have mostly used [ipyrad](https://github.com/dereneaton/ipyrad) to assemble RAD data, which has the option to exclude some samples and/or set a minimum coverage by locus when generating a final dataset. These options can be used to generate a dataset maximizing the number of samples while minimizing missing data.
-
-I wrote this app as a graphical interface to help me visualize the effects of excluding samples with poor coverage and changing the minimum number of samples for a locus. This can be done interactively here, making it quicker to preview what a matrix will look like for different combinations of sample removal / minimum coverage for a locus. It turns out other people found it useful to visualize phylogenetic structure in sequenced loci.
+I wrote this app as a graphical interface to help me visualize the effects of excluding samples with poor coverage and changing the minimum number of samples for a locus. This can be done interactively here, making it quicker to preview what a matrix will look like for different combinations of sample removal / minimum coverage for a locus. The main use of this tool is figuring out which samples/loci to filter out to obtain a data matrix with minimal missing data. It turns out other people found it also useful to visualize phylogenetic structure in sequenced loci.
 
 ## Usage
 This app can be run locally using R. There is also a web version hosted at https://bmedeiros.shinyapps.io/matrix_condenser. The app is hosted on a Shiny server with a free account, so the usage quota that might be exceeded if too many people access it or the dataset is too big. In case it does not work online, simply download the repository and run locally on your computer. The following command should work to run it locally in R:
