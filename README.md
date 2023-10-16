@@ -18,10 +18,11 @@ runGitHub("brunoasm/matrix_condenser")
 
 ### Input file types
 
-This app can take three kinds of input:
+This app can take four kinds of input:
 1. [Occupancy Matrix](#occupancy-matrix)
 2. [VCF files](#vcf-files)
 3. [`*.loci` output from ipyrad](#loci-output-from-ipyrad)
+4. [seq_lengths.tsv file from Hybpiper](#hybpiper-seq_lengths.tsv)
 
 ### Occupancy Matrix (sample in rows)
 
@@ -126,6 +127,10 @@ Downloading might also be useful to generate publication-quality figures. Look i
  
 
 Usually, I run ipyrad from steps 1-7, keeping all loci shared by at least 4 samples. I then upload the `*.loci` file obtained in this first run as input in this web app to get an idea of what minimum coverage I should use and which samples I should exclude to obtain a dataset with less missing data.
+
+### Hybpiper seq_lengths.tsv
+
+[Hybpiper](https://github.com/mossmatters/HybPiper) generates an occupancy matrix including data on locus length with the command `hybpiper stats`. Here we transform the file to just presence/absence so it can be visualized in Matrix Condenser. 
 
 
 ### Options to condense matrix

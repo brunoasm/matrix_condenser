@@ -105,6 +105,26 @@ parseOccMat <- function(input_path, transpose_mat = F){
   return(occmat)
 }
 
+parseHybPip <- function(input_path){
+  validate(
+    need(
+      try({
+        occmat = as.matrix(read.csv(file = input_path, header = T, row.names = 1, as.is = T, sep="\t")[-2,]) > 0
+      }), 
+      'Error reading input. Check if properly formatted occupancy matrix.'
+    )
+  )
+  
+  
+  validate(
+    need({dim(occmat)[2] > 0}, message = "Input not an occupancy matrix, check file type.")
+  )
+  samples = row.names(occmat)
+  occmat = apply(occmat,2,as.logical)
+  row.names(occmat) = samples
+  return(occmat)
+}
+
 parseVCF <- function(input_path){
   withProgress({
     validate(
@@ -132,7 +152,8 @@ shinyServer(function(input, output) {
            "Occupancy Matrix (sample in rows)" = "occmatrixw",
            "Occupancy Matrix (locus in rows)" = "occmatrixl",
            "ipyrad *.loci" = "ipyrad_loci",
-           "VCF" = "vcf")
+           "VCF" = "vcf",
+           "Hybpiper seq_lengths.tsv file" = "hybpiper")
   })
   
   samples_vs_loci <- reactive({
@@ -144,6 +165,8 @@ shinyServer(function(input, output) {
       parseOccMat(input$locifile$datapath, transpose_mat = T)
     } else if(filetype() == "vcf"){
       parseVCF(input$locifile$datapath)
+    } else if(filetype() == "hybpiper"){
+      parseHybPip(input$locifile$datapath)
     }
   })
   
