@@ -58,7 +58,12 @@ shinyUI(fluidPage(
                  verbatimTextOutput("includedSamples"),
                  h5("Excluded samples"),
                  verbatimTextOutput("excludedSamples")
-                 ) 
+                 ), 
+        tabPanel("Loci included",
+                 helpText("Here you can find a list of loci included the final dataset based on the chosen minimum coverage.\nYou can copy and paste them to use in another program."),
+                 h5("Included loci"),
+                 verbatimTextOutput("includedLoci")
+        ) 
       )
       
     )

@@ -122,6 +122,7 @@ parseHybPip <- function(input_path){
   samples = row.names(occmat)
   occmat = apply(occmat,2,as.logical)
   row.names(occmat) = samples
+
   return(occmat)
 }
 
@@ -292,7 +293,7 @@ shinyServer(function(input, output) {
       loci_to_keep <- apply(reduced_matrix, 2, sum) >= input$mincov
       reduced_matrix <- reduced_matrix[,loci_to_keep]
       
-    } else if (v$loci_first){ #if no specific sampels selected and loci first, remove loci and then samples according to sliders
+    } else if (v$loci_first){ #if no specific samples selected and loci first, remove loci and then samples according to sliders
       #first, remove loci below mincov
       loci_to_keep <- apply(samples_vs_loci(), 2, sum) >= input$mincov
       reduced_matrix <- samples_vs_loci()[,loci_to_keep]
@@ -351,6 +352,8 @@ shinyServer(function(input, output) {
     v$samples_to_remove <- samples_to_remove
     v$samples_to_include <- samples_to_include
     v$reduced_matrix <- reduced_matrix
+    v$loci_to_keep <- colnames(reduced_matrix)
+    
   },value = 1, message = 'Rendering output')
   })
   
@@ -412,6 +415,14 @@ shinyServer(function(input, output) {
     isolate({
       reduce_matrix()
       paste(v$samples_to_include, collapse = " ")
+    })
+  })
+  
+  output$includedLoci <- renderText({
+    if (v$doPlot == FALSE) return()
+    isolate({
+      reduce_matrix()
+      paste(v$loci_to_keep, collapse = " ")
     })
   })
   
