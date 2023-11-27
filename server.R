@@ -109,7 +109,7 @@ parseHybPip <- function(input_path){
   validate(
     need(
       try({
-        occmat = as.matrix(read.csv(file = input_path, header = T, row.names = 1, as.is = T, sep="\t")[-2,]) > 0
+        occmat = as.matrix(read.csv(file = input_path, header = T, row.names = 1, as.is = T, sep="\t")[-1,]) > 0
       }), 
       'Error reading input. Check if properly formatted occupancy matrix.'
     )
