@@ -1,4 +1,4 @@
-# Matrix condenser
+1# Matrix condenser
 ## Purpose
 This tool aids in the preparation of datasets for pupulation genomics or phylogenomics.
 
@@ -175,7 +175,7 @@ If you like and use this app, please cite the first publication in which I used 
 
    de Medeiros BAS, Farrell BD. (2018) Whole-genome amplification in double-digest RADseq results in adequate libraries but fewer sequenced loci. PeerJ 6:e5089 https://doi.org/10.7717/peerj.5089
 
-   de Medeiros BA. (2019) Matrix Condenser v.1.0. Available at: https://github.com/brunoasm/matrix_condenser/
+   de Medeiros BA. (2024) Matrix Condenser v.1.1. Available at: https://github.com/brunoasm/matrix_condenser/
 
 
 
